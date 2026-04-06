@@ -1,0 +1,51 @@
+services:
+
+  # Custom DNS server — redirects all Nintendo WFC domains to this machine.
+  # Runs on the host network ports so the DS can reach it directly.
+  # SERVER_IP is auto-detected and exported by start.sh.
+  dns:
+    build: ./dns
+    container_name: nds-dns
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    environment:
+      - NDS_SERVER_IP=${SERVER_IP}
+    restart: unless-stopped
+
+  # SSL terminator — accepts SSLv3/RC4 from the DS (via the nds-constrain't
+  # exploit) and forwards decrypted HTTP to the event-server on port 8080.
+  # Also proxies plain HTTP on port 80 for the DS connectivity check.
+  nginx:
+    build: ./nginx
+    container_name: nds-nginx
+    depends_on:
+      - event-server
+    volumes:
+      - ./certs/server-chain.crt:/etc/nginx/certs/server-chain.crt:ro
+      - ./certs/server.key:/etc/nginx/certs/server.key:ro
+    ports:
+      - "0.0.0.0:80:80/tcp"
+      - "0.0.0.0:443:443/tcp"
+    networks:
+      - nds_internal
+    restart: unless-stopped
+
+  # Flask event server — handles NAS authentication and DLS1 gift distribution.
+  # Only reachable from within nds_internal (via stunnel/socat on the nginx container).
+  event-server:
+    build: ./server
+    container_name: nds-event-server
+    environment:
+      - EVENTS_DIR=/app/events
+    volumes:
+      - ./server/events:/app/events:ro
+    ports:
+      - "127.0.0.1:8080:8080/tcp"
+    networks:
+      - nds_internal
+    restart: unless-stopped
+
+networks:
+  nds_internal:
+    driver: bridge

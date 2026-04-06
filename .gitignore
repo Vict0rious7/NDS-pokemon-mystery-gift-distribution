@@ -1,0 +1,13 @@
+# Event files — add locally, do not commit
+server/events/gen4/*.myg
+server/events/gen5/*.pgf
+
+# Build artifacts
+build.log
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc

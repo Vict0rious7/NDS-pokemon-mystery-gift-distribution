@@ -283,3 +283,7 @@ Reset your DS DNS settings back to automatic when done.
 - **Wiimmfi / Poke** for the DLS1 server implementation and event file collection
 - **InternalLoss** for the DLS1-Files repository
 - **ProjectPokemon** community for event preservation
+
+## License
+
+GPL-3.0 (see `LICENSE`). If you share a modified version, its source must stay open under the same licence.

@@ -47,7 +47,7 @@ Your options:
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
-- The **Wii NWC Prod 1 certificate** (`WII_NWC_1_CERT.p12`, password: `alpine`) — included in this repository under `certs/`
+- The **Wii NWC Prod 1 certificate** (`WII_NWC_1_CERT.p12`), which you supply yourself and put in `certs/`. It is not included in this repository.
 - OpenSSL (usually pre-installed on macOS/Linux)
 
 ---
@@ -88,10 +88,7 @@ nds-server/
 
 ## Certificate setup
 
-> **The certificates are already included in `certs/` and work out of the box. You do not need to run any of the commands below.** This section is only relevant if you need to regenerate them from scratch — for example if you want to use a different Wii NWC certificate.
-
-<details>
-<summary>How to regenerate the certificates</summary>
+> **No certificates are included in this repository.** Put your own `WII_NWC_1_CERT.p12` in `certs/`, then run the steps below once. Everything in `certs/` is ignored by git, so your files are never committed.
 
 The nds-constrain't exploit works because the DS doesn't check whether an intermediate certificate is allowed to sign other certificates. The Wii's client certificate is signed by Nintendo's CA, and the DS trusts Nintendo's CA — so we use the Wii cert to sign our own server certificate.
 
@@ -138,7 +135,6 @@ stunnel needs to present both the server cert and the Wii intermediate cert so t
 cat server.crt NWC.crt > server-chain.crt
 ```
 
-</details>
 
 ---
 

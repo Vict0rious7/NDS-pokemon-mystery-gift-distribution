@@ -11,3 +11,16 @@ build.log
 # Python
 __pycache__/
 *.pyc
+
+# Certificates and keys — supply your own, never commit
+certs/
+*.p12
+*.pfx
+*.key
+*.crt
+*.cer
+*.csr
+*.srl
+*.pem
+*.der
+*.crl
